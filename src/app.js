@@ -17,6 +17,8 @@ const { nCharacters } = require('./lib/strings');
 const { add } = require('./lib/numbers');
 const { subtract } = require('./lib/numbers');
 const { multiply } = require('./lib/numbers');
+const { divide } = require('./lib/numbers');
+const { remainder } = require('./lib/numbers');
 
 //-----------------
 
@@ -65,15 +67,39 @@ app.get('/numbers/subtract/:a/from/:b', (req, res) => {
   }
 });
 
-// app.post('/numbers/multiply', (req, res) => {
-// res.status(200).json({ result: multiply(req.body.a, req.body.b) });
-// });
-
 app.post('/numbers/multiply', (req, res) => {
-  if (Number.isNaN(req.body.a, 10) || Number.isNaN(req.body.b, 10)) {
-    res.status(400).json({ error: 'Parameters must be valid numbers.' });
+  if (req.body.a === undefined || req.body.b === undefined) {
+    res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+  } else if (Number.isNaN(parseInt(req.body.a, 10)) || Number.isNaN(parseInt(req.body.b, 10))) {
+    res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
   } else {
     res.status(200).json({ result: multiply(req.body.a, req.body.b) });
+  }
+});
+
+app.post('/numbers/divide', (req, res) => {
+  if (parseInt(req.body.b, 10) === 0) {
+    res.status(400).json({ error: 'Unable to divide by 0.' });
+  } else if (req.body.a === undefined || req.body.b === undefined) {
+    res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+  } else if (Number.isNaN(parseInt(req.body.a, 10)) || Number.isNaN(parseInt(req.body.b, 10))) {
+    res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
+  } else {
+    res.status(200).json({ result: divide(req.body.a, req.body.b) });
+  }
+});
+
+// -----------------Next work-----------------
+
+app.post('/numbers/remainder', (req, res) => {
+  if (parseInt(req.body.b, 10) === 0) {
+    res.status(400).json({ error: 'Unable to divide by 0.' });
+  } else if (req.body.a === undefined || req.body.b === undefined) {
+    res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+  } else if (Number.isNaN(parseInt(req.body.a, 10)) || Number.isNaN(parseInt(req.body.b, 10))) {
+    res.status(400).json({ error: 'Parameters must be valid numbers.' });
+  } else {
+    res.status(200).json({ result: remainder(req.body.a, req.body.b) });
   }
 });
 
